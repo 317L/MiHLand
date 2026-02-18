@@ -1,53 +1,74 @@
-// apps/web/src/lib/directus.ts
-
-const base = process.env.NEXT_PUBLIC_DIRECTUS_URL;
-const hasBase = Boolean(base);
-
-// Token nije public. Koristi se samo na serveru.
-const token = process.env.DIRECTUS_TOKEN;
+const base = process.env.NEXT_PUBLIC_DIRECTUS_URL ?? "";
 
 export type Position = {
   id: number;
   title: string;
-  location: string;
+  location: string | boolean | null;
   remote: boolean | null;
   technologies: string[] | null;
-  employment_type: string;
-  slug: string;
-  apply_url: string;
+  employment_type: string | string[] | null;
+  slug: string | null;
+  apply_url: string | null;
+  is_active?: boolean | null;
 };
 
 type DirectusListResponse<T> = { data: T[] };
 
-export async function getPositions(): Promise<Position[]> {
-  // Allow deployment without Directus configured (e.g. first Vercel deploy)
-  if (!hasBase) return [];
+type GetPositionsOptions = { debug?: boolean };
 
-  const fields = [
-    "id",
-    "title",
-    "location",
-    "remote",
-    "technologies",
-    "employment_type",
-    "slug",
-    "apply_url",
-  ].join(",");
+type GetPositionsResult = {
+  positions: Position[];
+  debug: {
+    base: string | null;
+    hasBase: boolean;
+    url: string | null;
+    status?: number;
+    responseSnippet?: string;
+    headersSent?: Record<string, string>;
+  };
+};
 
-  const url = `${base}/items/positions?fields=${encodeURIComponent(fields)}&sort=-id`;
+export async function getPositions(
+  options: GetPositionsOptions = {}
+): Promise<GetPositionsResult> {
+  const hasBase = Boolean(base);
 
-  const res = await fetch(url, {
-    cache: "no-store",
-    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-  });
+  const debug: GetPositionsResult["debug"] = {
+    base: base || null,
+    hasBase,
+    url: null,
+    status: undefined,
+    responseSnippet: undefined,
+    headersSent: {},
+  };
 
-  // In dev/prod: don't crash the whole page build/runtime if Directus is temporarily down
+  if (!hasBase) return { positions: [], debug };
+
+  // MOŽEŠ i bez fields (kao tvoj incognito test)
+  const url = `${base}/items/positions?sort=-id`;
+  debug.url = url;
+
+  // NAMJERNO: bez Authorization headera
+  const res = await fetch(url, { cache: "no-store" });
+
+  debug.status = res.status;
+
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    console.warn(`Directus error ${res.status}: ${text}`);
-    return [];
+    debug.responseSnippet = text.slice(0, 900);
+    if (options.debug) console.warn(`[Directus] error ${res.status}:`, debug.responseSnippet);
+    return { positions: [], debug };
   }
 
   const json = (await res.json()) as DirectusListResponse<Position>;
-  return json.data ?? [];
+
+  const positions = (json.data ?? []).map((p) => ({
+    ...p,
+    remote: p.remote ?? false,
+    technologies: Array.isArray(p.technologies) ? p.technologies : [],
+    apply_url: typeof p.apply_url === "string" ? p.apply_url : null,
+    slug: typeof p.slug === "string" ? p.slug : null,
+  }));
+
+  return { positions, debug };
 }

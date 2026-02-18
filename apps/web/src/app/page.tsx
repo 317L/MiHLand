@@ -1,66 +1,92 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from "next/link";
+import { getPositions } from "@/lib/directus";
 
-export default function Home() {
+export default async function Home() {
+  const positions = await getPositions();
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main style={{ maxWidth: 1200, margin: "0 auto", padding: 40 }}>
+      <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+        <div style={{ fontSize: 28, fontWeight: 700 }}>mih</div>
+        <nav style={{ display: "flex", gap: 24, alignItems: "center" }}>
+          <a href="#">Services</a>
+          <a href="#">Industries</a>
+          <a href="#">Technologies</a>
+          <a href="#">Case studies</a>
+          <a href="#">About</a>
+          <a href="#">Careers</a>
+          <button style={{ padding: "10px 16px", borderRadius: 999, border: "1px solid #222", background: "#111", color: "#fff" }}>
+            Contact
+          </button>
+        </nav>
+      </header>
+
+      <div style={{ borderTop: "1px solid #2a2a2a" }}>
+        {positions.map((p) => (
+          <div
+            key={p.id}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "2fr 1fr 1fr 1fr",
+              gap: 24,
+              padding: "22px 0",
+              borderBottom: "1px solid #2a2a2a",
+              alignItems: "center",
+            }}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            <div>
+              <div style={{ fontSize: 20, fontWeight: 600, marginBottom: 10 }}>{p.title}</div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {(p.technologies ?? []).map((t) => (
+                  <span
+                    key={t}
+                    style={{
+                      fontSize: 12,
+                      padding: "6px 10px",
+                      borderRadius: 999,
+                      background: "#dff3c6",
+                      color: "#1b1b1b",
+                    }}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 16 }}>{p.location}</div>
+              {p.remote ? (
+                <div style={{ marginTop: 8 }}>
+                  <span
+                    style={{
+                      fontSize: 12,
+                      padding: "6px 10px",
+                      borderRadius: 999,
+                      background: "#dff3c6",
+                      color: "#1b1b1b",
+                    }}
+                  >
+                    remote-friendly
+                  </span>
+                </div>
+              ) : null}
+            </div>
+
+            <div style={{ fontSize: 16 }}>{p.employment_type}</div>
+
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Link
+                href={p.apply_url}
+                target="_blank"
+                style={{ display: "inline-flex", alignItems: "center", gap: 10, fontWeight: 600 }}
+              >
+                Apply now <span aria-hidden>→</span>
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+    </main>
   );
 }

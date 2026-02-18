@@ -1,6 +1,7 @@
-const base = process.env.NEXT_PUBLIC_DIRECTUS_URL;
+// apps/web/src/lib/directus.ts
 
-if (!base) throw new Error("NEXT_PUBLIC_DIRECTUS_URL is missing");
+const base = process.env.NEXT_PUBLIC_DIRECTUS_URL;
+const hasBase = Boolean(base);
 
 // Token nije public. Koristi se samo na serveru.
 const token = process.env.DIRECTUS_TOKEN;
@@ -19,6 +20,9 @@ export type Position = {
 type DirectusListResponse<T> = { data: T[] };
 
 export async function getPositions(): Promise<Position[]> {
+  // Allow deployment without Directus configured (e.g. first Vercel deploy)
+  if (!hasBase) return [];
+
   const fields = [
     "id",
     "title",
@@ -37,8 +41,13 @@ export async function getPositions(): Promise<Position[]> {
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
   });
 
-  if (!res.ok) throw new Error(`Directus ${res.status}: ${await res.text()}`);
+  // In dev/prod: don't crash the whole page build/runtime if Directus is temporarily down
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    console.warn(`Directus error ${res.status}: ${text}`);
+    return [];
+  }
 
   const json = (await res.json()) as DirectusListResponse<Position>;
-  return json.data;
+  return json.data ?? [];
 }

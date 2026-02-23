@@ -94,6 +94,7 @@ Important:
 # 5. Technology Stack
 
 Frontend:
+
 - Next.js 16 (App Router)
 - React Server Components
 - TypeScript
@@ -102,11 +103,13 @@ Frontend:
 - Turbopack (dev)
 
 CMS:
+
 - Directus 11.x
 - Static Access Token
 - Public read policy
 
 Infrastructure:
+
 - Docker
 - Docker Compose
 - PostgreSQL
@@ -121,9 +124,9 @@ Infrastructure:
 mih-marketing-site/
 │
 ├── apps/
-│   └── web/                     # Next.js application
+│ └── web/ # Next.js application
 │
-├── docker-compose.yml           # Directus + PostgreSQL (local)
+├── docker-compose.yml # Directus + PostgreSQL (local)
 ├── pnpm-workspace.yaml
 ├── package.json
 ├── README.md
@@ -145,7 +148,7 @@ DIRECTUS_TOKEN=YOUR_STATIC_ACCESS_TOKEN
 
 Rules:
 
-- NEXT_PUBLIC_* → exposed to browser (safe values only)
+- NEXT*PUBLIC*\* → exposed to browser (safe values only)
 - DIRECTUS_TOKEN → server-only
 - Restart dev server after changes
 - Never commit secrets
@@ -157,6 +160,7 @@ Rules:
 We do NOT use Directus SDK.
 
 Reasons:
+
 - Smaller bundle
 - Full control over fetch
 - No extra client dependency
@@ -164,6 +168,7 @@ Reasons:
 - Typed API layer
 
 Responsibilities:
+
 - Typed fetch
 - Bearer authentication
 - Cache control
@@ -179,6 +184,7 @@ GET /items/positions
 Collection: positions
 
 Fields:
+
 - id
 - title
 - location
@@ -193,14 +199,14 @@ Fields:
 # 10. Security Model
 
 Client
-   │
-   ▼
+│
+▼
 Next.js Server
-   │ (Bearer Token)
-   ▼
+│ (Bearer Token)
+▼
 Directus API
-   │
-   ▼
+│
+▼
 PostgreSQL
 
 Security Decisions:
@@ -215,9 +221,11 @@ Security Decisions:
 # 11. Caching Strategy
 
 Current:
+
 - cache: "no-store"
 
 Planned:
+
 - ISR (Incremental Static Regeneration)
 - CDN edge caching
 - Route-based revalidation
@@ -306,16 +314,17 @@ Deployment Steps:
                       │
       ┌───────────────┴───────────────┐
       │                               │
-┌────────────┐                 ┌────────────┐
-│ Next.js    │                 │ Directus   │
-│ Container  │                 │ Container  │
-└─────┬──────┘                 └─────┬──────┘
-      │                                │
-      └──────────────┬─────────────────┘
-                     ▼
-              ┌────────────┐
-              │ PostgreSQL │
-              └────────────┘
+
+┌────────────┐ ┌────────────┐
+│ Next.js │ │ Directus │
+│ Container │ │ Container │
+└─────┬──────┘ └─────┬──────┘
+│ │
+└──────────────┬─────────────────┘
+▼
+┌────────────┐
+│ PostgreSQL │
+└────────────┘
 
 ---
 
@@ -325,7 +334,7 @@ Branching strategy:
 
 main  
 develop  
-feature/*
+feature/\*
 
 Workflow:
 
@@ -385,16 +394,19 @@ If traffic increases:
 # 20. Roadmap
 
 Short-term:
+
 - /careers/[slug]
 - SEO metadata
 - Contact form
 
 Mid-term:
+
 - CMS-driven landing sections
 - Rich text blocks
 - ISR
 
 Long-term:
+
 - CI/CD
 - Staging
 - Performance tuning
@@ -426,6 +438,104 @@ Project is development-ready and production-deployable.
 - Keep architecture decisions documented
 
 ---
+
+# 23. Frontend Architecture
+
+apps/web/src structure:
+
+app/ → Next.js routing (App Router)
+features/ → Business domain modules
+shared/ → Reusable UI + utilities
+lib/ → API layer & infrastructure
+store/ → Global state (Zustand)
+hooks/ → Shared React hooks
+types/ → Global TypeScript types
+styles/ → Global styling / tokens
+
+# SEO Strategy
+
+- App Router Metadata API
+- Server-side rendering
+- Structured data (JSON-LD planned)
+- Sitemap generation (planned)
+- Robots.txt
+- Open Graph tags
+- Dynamic metadata per slug page
+
+# Performance Optimization
+
+- React Server Components
+- Zero client-side Directus SDK
+- Minimal client bundle
+- Turbopack (dev)
+- Planned: ISR for high-traffic pages
+- Planned: CDN edge caching
+- Planned: Image optimization
+
+# Error Handling
+
+- Centralized API error normalization
+- 404 handling via notFound()
+- Route-level error.tsx
+- Planned: Global error boundary
+- Planned: Logging middleware
+
+# Type Safety Strategy
+
+- Strict TypeScript mode enabled
+- API response typing
+- Zod (planned for validation)
+- No any usage in business logic
+- Shared types across layers
+
+# Code Quality & Tooling
+
+- ESLint (flat config)
+- Prettier
+- Husky (pre-commit hooks)
+- lint-staged
+- Commitlint
+- PNPM workspace
+- Import sorting
+- Unused import removal
+
+# Security Considerations
+
+- No client-side tokens
+- No SDK exposure
+- Server Components for data fetching
+- Environment variable separation
+- Docker container isolation
+- Planned: Rate limiting
+- Planned: Security headers
+
+# API Abstraction Layer
+
+The project uses a custom fetch-based API layer instead of Directus SDK.
+
+Benefits:
+
+- Full control over caching
+- Smaller bundle size
+- Better tree shaking
+- Typed responses
+- Infrastructure isolation
+
+# Environments
+
+- Local (Docker Compose)
+- Development (Vercel Preview + Render Dev)
+- Production (Vercel + Render)
+
+Each environment uses separate database and token.
+
+# Architecture Decisions
+
+ADR-001: Use Directus as Headless CMS  
+ADR-002: Do not use Directus SDK  
+ADR-003: Split deployment (Vercel + Render)  
+ADR-004: Server Components for data fetching  
+ADR-005: PNPM workspace for scalability
 
 # License
 

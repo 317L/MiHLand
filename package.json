@@ -3,9 +3,31 @@
   "private": true,
   "packageManager": "pnpm@10.30.0",
   "scripts": {
-    "dev": "pnpm -C apps/web dev",
-    "build": "pnpm -C apps/web build",
-    "start": "pnpm -C apps/web start",
-    "lint": "pnpm -C apps/web lint"
+    "build": "pnpm --filter ./apps/web run build",
+    "dev": "pnpm --filter ./apps/web run dev",
+    "lint": "pnpm --filter ./apps/web run lint",
+    "lint:fix": "pnpm --filter ./apps/web run lint:fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "doctor": "bash scripts/doctor.sh"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "pnpm --filter ./apps/web run lint:fix"
+    ],
+    "*.{css,scss,md,json,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.4.1",
+    "@commitlint/config-conventional": "^20.4.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1"
   }
 }

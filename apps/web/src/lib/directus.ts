@@ -1,4 +1,4 @@
-const base = process.env.NEXT_PUBLIC_DIRECTUS_URL ?? "";
+const base = process.env.NEXT_PUBLIC_DIRECTUS_URL ?? '';
 
 export type Position = {
   id: number;
@@ -28,12 +28,10 @@ type GetPositionsResult = {
   };
 };
 
-export async function getPositions(
-  options: GetPositionsOptions = {}
-): Promise<GetPositionsResult> {
+export async function getPositions(options: GetPositionsOptions = {}): Promise<GetPositionsResult> {
   const hasBase = Boolean(base);
 
-  const debug: GetPositionsResult["debug"] = {
+  const debug: GetPositionsResult['debug'] = {
     base: base || null,
     hasBase,
     url: null,
@@ -49,12 +47,12 @@ export async function getPositions(
   debug.url = url;
 
   // NAMJERNO: bez Authorization headera
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { cache: 'no-store' });
 
   debug.status = res.status;
 
   if (!res.ok) {
-    const text = await res.text().catch(() => "");
+    const text = await res.text().catch(() => '');
     debug.responseSnippet = text.slice(0, 900);
     if (options.debug) console.warn(`[Directus] error ${res.status}:`, debug.responseSnippet);
     return { positions: [], debug };
@@ -66,8 +64,8 @@ export async function getPositions(
     ...p,
     remote: p.remote ?? false,
     technologies: Array.isArray(p.technologies) ? p.technologies : [],
-    apply_url: typeof p.apply_url === "string" ? p.apply_url : null,
-    slug: typeof p.slug === "string" ? p.slug : null,
+    apply_url: typeof p.apply_url === 'string' ? p.apply_url : null,
+    slug: typeof p.slug === 'string' ? p.slug : null,
   }));
 
   return { positions, debug };

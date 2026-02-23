@@ -48,6 +48,7 @@ The system is designed to be:
 User → Next.js Server → Directus REST → PostgreSQL → Directus → Next.js → User
 
 Important:
+
 - Directus token is used ONLY server-side.
 - No token is exposed to the browser.
 
@@ -56,6 +57,7 @@ Important:
 # 4. Technology Stack
 
 Frontend:
+
 - Next.js 16 (App Router)
 - React Server Components
 - TypeScript
@@ -64,11 +66,13 @@ Frontend:
 - Turbopack (development)
 
 CMS:
+
 - Directus 11.x
 - Static Access Token
 - Public read policy
 
 Infrastructure:
+
 - Docker
 - Docker Compose
 - PostgreSQL
@@ -81,9 +85,9 @@ Infrastructure:
 mih-marketing-site/
 │
 ├── apps/
-│   └── web/                     # Next.js application
+│ └── web/ # Next.js application
 │
-├── docker-compose.yml           # Directus + PostgreSQL
+├── docker-compose.yml # Directus + PostgreSQL
 ├── pnpm-workspace.yaml
 ├── package.json
 ├── README.md
@@ -100,7 +104,7 @@ DIRECTUS_TOKEN=YOUR_STATIC_ACCESS_TOKEN
 
 Rules:
 
-- NEXT_PUBLIC_* → exposed to browser
+- NEXT*PUBLIC*\* → exposed to browser
 - DIRECTUS_TOKEN → server-only
 - Restart dev server after changes
 
@@ -111,12 +115,14 @@ Rules:
 We do NOT use Directus SDK.
 
 Reasons:
+
 - Smaller bundle
 - Full control
 - No client dependency
 - Better debugging
 
 Data layer responsibilities:
+
 - Typed fetch
 - Bearer authentication
 - Cache control
@@ -132,6 +138,7 @@ GET /items/positions
 Collection: positions
 
 Fields:
+
 - id
 - title
 - location
@@ -146,17 +153,18 @@ Fields:
 # 9. Security Model
 
 Client
-   │
-   ▼
+│
+▼
 Next.js Server
-   │ (Bearer Token)
-   ▼
+│ (Bearer Token)
+▼
 Directus API
-   │
-   ▼
+│
+▼
 PostgreSQL
 
 Security Decisions:
+
 - Token never exposed client-side
 - Public read-only policy for marketing content
 - Admin-only write access
@@ -167,9 +175,11 @@ Security Decisions:
 # 10. Caching Strategy
 
 Current:
+
 - cache: "no-store"
 
 Planned:
+
 - ISR (Incremental Static Regeneration)
 - CDN edge caching
 - Route-based revalidation
@@ -251,16 +261,17 @@ Steps:
                       │
       ┌───────────────┴───────────────┐
       │                               │
-┌────────────┐                 ┌────────────┐
-│ Next.js    │                 │ Directus   │
-│ Container  │                 │ Container  │
-└─────┬──────┘                 └─────┬──────┘
-      │                                │
-      └──────────────┬─────────────────┘
-                     ▼
-              ┌────────────┐
-              │ PostgreSQL │
-              └────────────┘
+
+┌────────────┐ ┌────────────┐
+│ Next.js │ │ Directus │
+│ Container │ │ Container │
+└─────┬──────┘ └─────┬──────┘
+│ │
+└──────────────┬─────────────────┘
+▼
+┌────────────┐
+│ PostgreSQL │
+└────────────┘
 
 ---
 
@@ -270,9 +281,10 @@ Branching strategy:
 
 main
 develop
-feature/*
+feature/\*
 
 Workflow:
+
 - Create feature branch
 - PR → develop
 - Merge → main
@@ -283,12 +295,14 @@ Workflow:
 # 16. CI/CD Plan (Future)
 
 On push to main:
+
 - Install dependencies
 - Run lint
 - Build
 - Deploy
 
 Future additions:
+
 - Preview builds
 - Staging environment
 - Production monitoring
@@ -320,16 +334,19 @@ If traffic increases:
 # 19. Roadmap
 
 Short-term:
+
 - /careers/[slug]
 - SEO metadata
 - Contact form
 
 Mid-term:
+
 - CMS-driven landing sections
 - Rich text blocks
 - ISR
 
 Long-term:
+
 - CI/CD
 - Staging
 - Performance tuning

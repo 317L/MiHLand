@@ -1,0 +1,140 @@
+/* Design tokens from Figma variables + semantic aliases */
+
+:root {
+  /* Breakpoints (docs) */
+  --bp-tablet: 834px;
+  --bp-mobile: 393px;
+
+  /* Grid / layout */
+  --page-width: 1920px;
+  --grid-columns: 12;
+  --screen-margin: 32px;
+  --grid-gutter: 32px;
+  --container-max: 1456px;
+
+  /**
+   * Figma inspect ti pokazuje: --grid-content-containerMax: 91rem
+   * 1456px / 16 = 91rem
+   */
+  --grid-content-containerMax: 91rem;
+
+  /* Padding scale */
+  --padding-padXS: 8px;
+  --padding-padSm: 12px;
+  --padding-padMd: 16px;
+  --padding-padLg: 24px;
+  --padding-padXL: 32px;
+  --padding-padXXL: 48px;
+  --padding-padSection: 96px;
+
+  /* Gap scale */
+  --gap-gapGutter: var(--grid-gutter);
+  --gap-gapXXS: 4px;
+  --gap-gapXS: 8px;
+  --gap-gapSm: 12px;
+  --gap-gapMd: 16px;
+  --gap-gapLg: 24px;
+  --gap-gapXL: 32px;
+  --gap-gapXXL: 48px;
+  --gap-gapSection: 96px;
+  --gap-gapH-1col: 156px;
+
+  /* Icon sizes */
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+  --icon-xl: 32px;
+  --icon-xxl: 46px;
+
+  /* Corner radius */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-xxl: 32px;
+  --radius-round: 99999px;
+
+  /* ===== Base colors (from your screenshots) ===== */
+  --base-gray-0: #ffffff;
+  --base-gray-300: #b0b0b0;
+  --base-gray-400: #969696;
+  --base-gray-950: #111111;
+  --base-brand-primary: #b4e717;
+
+  /* ===== Semantic aliases (match Figma semantic/* exactly) ===== */
+  /* background */
+  --semantic-bg-page: var(--base-gray-0);
+
+  /* text */
+  --semantic-text-primary: var(--base-gray-950);
+  --semantic-text-muted: var(--base-gray-400);
+
+  /* border */
+  --semantic-border-default: var(--base-gray-300);
+
+  /* action / primary */
+  --semantic-action-primary-primary: var(--base-brand-primary);
+  --semantic-action-primary-primaryText: var(--base-gray-950);
+
+  /* action / inverse */
+  --semantic-action-inverse-inverse: var(--base-gray-950);
+  --semantic-action-inverse-inverseText: var(--base-gray-0);
+}
+
+/* Tablet (<= 834) */
+@media (max-width: 834px) {
+  :root {
+    --page-width: 834px;
+    --grid-columns: 8;
+    --screen-margin: 13px;
+    --grid-gutter: 24px;
+    --container-max: 808px;
+
+    /* 808px / 16 = 50.5rem */
+    --grid-content-containerMax: 50.5rem;
+
+    --padding-padXS: 4px;
+    --padding-padSm: 8px;
+    --padding-padMd: 12px;
+    --padding-padLg: 16px;
+    --padding-padXL: 24px;
+    --padding-padXXL: 32px;
+    --padding-padSection: 72px;
+
+    --gap-gapLg: 20px;
+    --gap-gapXL: 28px;
+    --gap-gapSection: 48px;
+    --gap-gapH-1col: 48px;
+  }
+}
+
+/* Mobile (<= 393) */
+@media (max-width: 393px) {
+  :root {
+    --page-width: 393px;
+    --grid-columns: 4;
+    --screen-margin: 16px;
+    --grid-gutter: 16px;
+
+    /* Figma shows 0; in code use full width */
+    --container-max: 100%;
+    --grid-content-containerMax: 100%;
+
+    --padding-padXS: 8px;
+    --padding-padSm: 12px;
+    --padding-padMd: 16px;
+    --padding-padLg: 16px;
+    --padding-padXL: 24px;
+    --padding-padXXL: 32px;
+    --padding-padSection: 48px;
+
+    --gap-gapLg: 16px;
+    --gap-gapXL: 24px;
+    --gap-gapXXL: 32px;
+    --gap-gapSection: 32px;
+    --gap-gapH-1col: 32px;
+
+    --icon-xxl: 32px;
+  }
+}

@@ -1,7 +1,9 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  turbopack: {
+    // Force turbopack to treat monorepo root as the workspace root
+    root: "../../",
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
